@@ -2,14 +2,15 @@ package domain;
 
 import java.util.List;
 
-public class Writer extends Thread {
+public class Writer implements Runnable {
     private final String[] contents = {"Java", "Spring Boot", "Quarkus", "Maven"};
     private List<String> resources;
 
-    public Writer(List resources) {
+    public Writer(List<String> resources) {
         this.resources = resources;
     }
 
+    @Override
     public void run() {
         for(String content: contents) {
             System.out.println("Writing new content: " + content);

@@ -2,13 +2,14 @@ package domain;
 
 import java.util.List;
 
-public class Reader extends Thread {
+public class Reader implements Runnable {
     private List<String> data;
 
-    public Reader(List data) {
+    public Reader(List<String> data) {
         this.data = data;
     }
 
+    @Override
     public void run() {
         int i = 0;
 
