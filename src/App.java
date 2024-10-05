@@ -1,21 +1,35 @@
-import java.util.ArrayList;
-import java.util.List;
-
 import domain.Reader;
 import domain.Writer;
+import services.ResourceService;
+import services.ResourceServiceImpl;
 
 public class App {
-    private static List<String> contents = new ArrayList<>();
+    private static ResourceService resourceService;
+    private final static int NB_THREAD = 5;
 
     public static void main(String[] args) {
-        Writer w = new Writer(contents);
-        Reader r = new Reader(contents);
+        resourceService = new ResourceServiceImpl();
+        Writer writer = new Writer(resourceService);
+        Reader reader = new Reader(resourceService);
 
-        Thread th1 = new Thread(w);
-        Thread th2 = new Thread(r);
-        
+        Thread[] threads = new Thread[NB_THREAD];
+
+        threads[0] = new Thread(writer);
+        for (int i = 1; i < NB_THREAD; i++) {
+            threads[i] = new Thread(reader);
+        }
+
         System.out.println("Launching threads");
-        th1.start();
-        th2.start();
+        for (int i = 0; i < NB_THREAD; i++) {
+            threads[i].start();
+        }
+
+        for (int i = 0; i < NB_THREAD; i++) {
+            try {
+                threads[i].join();
+            } catch(InterruptedException e) {
+                //...
+            }
+        }
     }
 }

@@ -1,26 +1,27 @@
 package domain;
 
-import java.util.List;
+import java.util.Optional;
+
+import services.ResourceService;
 
 public class Reader implements Runnable {
-    private List<String> data;
+    private ResourceService resourceService;
 
-    public Reader(List<String> data) {
-        this.data = data;
+    public Reader(ResourceService resourceService) {
+        this.resourceService = resourceService;
     }
 
     @Override
     public void run() {
         int i = 0;
 
-        while(i++ < 7) {
-            System.out.println("Reading all data...");
-            System.out.println(data);
-
-            try {
-                Thread.sleep(10);
-            } catch (Exception e) {
-                // TODO: handle exception
+        while(i++ < 3) {
+            synchronized (resourceService) {
+                System.out.println("Reading data...");
+                Optional<String> data = resourceService.getData();
+                if (data.isPresent()) {
+                    System.out.println(data.get());
+                }
             }
         }
     }
