@@ -16,12 +16,16 @@ public class Reader implements Runnable {
         int i = 0;
 
         while(i++ < 3) {
-            synchronized (resourceService) {
-                System.out.println("Reading data...");
-                Optional<String> data = resourceService.getData();
-                if (data.isPresent()) {
-                    System.out.println(data.get());
-                }
+            //System.out.println("Reading data...");
+            Optional<String> data = resourceService.readData();
+            if (data.isPresent()) {
+                System.out.println(data.get());
+            }
+
+            try {
+                Thread.sleep(30);
+            } catch (InterruptedException e) {
+                // TODO: handle exception
             }
         }
     }

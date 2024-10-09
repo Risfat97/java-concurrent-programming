@@ -13,9 +13,13 @@ public class Writer implements Runnable {
     @Override
     public void run() {
         for(String content: contents) {
-            synchronized (resourceService) {
-                System.out.println("Writing new content: " + content);
-                resourceService.addData(content);
+            //System.out.println("Writing new content: " + content);
+            resourceService.writeData(content);
+
+            try {
+                Thread.sleep(20);
+            } catch (InterruptedException e) {
+                // TODO: handle exception
             }
         }
     }

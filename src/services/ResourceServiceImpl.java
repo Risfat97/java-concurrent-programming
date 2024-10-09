@@ -1,17 +1,17 @@
 package services;
 
-import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class ResourceServiceImpl implements ResourceService {
-    private Deque<String> resources = new ArrayDeque<>();
+    private Deque<String> resources = new ConcurrentLinkedDeque<>();
 
-    public void addData(String data) {
+    public void writeData(String data) {
         resources.add(data);
     }
 
-    public Optional<String> getData() {
-        return resources.isEmpty() ? Optional.empty() : Optional.of(resources.removeFirst());
+    public Optional<String> readData() {
+        return Optional.ofNullable(resources.poll());
     }
 }
