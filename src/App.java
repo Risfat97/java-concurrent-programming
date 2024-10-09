@@ -1,22 +1,23 @@
-import domain.Reader;
-import domain.Writer;
-import services.ResourceService;
-import services.ResourceServiceImpl;
+import domain.Counter;
 
 public class App {
-    private static ResourceService resourceService;
-    private final static int NB_THREAD = 5;
+    private final static int NB_THREAD = 10;
 
     public static void main(String[] args) {
-        resourceService = new ResourceServiceImpl();
-        Writer writer = new Writer(resourceService);
-        Reader reader = new Reader(resourceService);
+        Counter counter = new Counter();
+
+        Runnable counterR = new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 100; i++)
+                    counter.increment();
+            }
+        };
 
         Thread[] threads = new Thread[NB_THREAD];
 
-        threads[0] = new Thread(writer);
-        for (int i = 1; i < NB_THREAD; i++) {
-            threads[i] = new Thread(reader);
+        for (int i = 0; i < NB_THREAD; i++) {
+            threads[i] = new Thread(counterR);
         }
 
         System.out.println("Launching threads");
@@ -31,5 +32,7 @@ public class App {
                 //...
             }
         }
+
+        System.out.println("Final value of counter: " + counter.getCount());
     }
 }
